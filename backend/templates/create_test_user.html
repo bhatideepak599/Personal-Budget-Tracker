@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Test User - Budget Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .info-box h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .info-box p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .credentials {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .credentials strong {
+            color: #1976d2;
+        }
+        
+        .credentials p {
+            margin: 5px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        .result h3 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .result p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #856404;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Create Test User</h1>
+        <p class="subtitle">Budget Tracker - Initial Setup</p>
+        
+        <div class="info-box">
+            <h3>📝 What This Does</h3>
+            <p>This will create a test user account with default categories so you can start using the Budget Tracker immediately.</p>
+        </div>
+        
+        <div class="credentials">
+            <strong>Test User Credentials:</strong>
+            <p>Username: <strong>testuser</strong></p>
+            <p>Password: <strong>testpass123</strong></p>
+        </div>
+        
+        <div class="warning">
+            ⚠️ <strong>Security Note:</strong> This endpoint should be disabled after initial setup. Change the password after first login.
+        </div>
+        
+        <button id="createBtn" onclick="createTestUser()">
+            Create Test User
+        </button>
+        
+        <div id="result" class="result"></div>
+    </div>
+    
+    <script>
+        async function createTestUser() {
+            const btn = document.getElementById('createBtn');
+            const resultDiv = document.getElementById('result');
+            
+            // Disable button and show loading
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Creating...';
+            
+            // Hide previous result
+            resultDiv.style.display = 'none';
+            resultDiv.className = 'result';
+            
+            try {
+                const response = await fetch('/api/create-test-user/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                
+                // Show result
+                resultDiv.style.display = 'block';
+                
+                if (response.ok) {
+                    if (data.status === 'created') {
+                        resultDiv.className = 'result success';
+                        resultDiv.innerHTML = `
+                            <h3>✅ Success!</h3>
+                            <p><strong>Test user created successfully!</strong></p>
+                            <p>Username: <strong>${data.username}</strong></p>
+                            <p>Password: <strong>${data.password}</strong></p>
+                            <p>Categories created: ${data.categories_created}</p>
+                            <p style="margin-top: 15px;">
+                                <strong>Next Step:</strong> Go to your frontend and login with these credentials.
+                            </p>
+                        `;
+                    } else if (data.status === 'exists') {
+                        resultDiv.className = 'result info';
+                        resultDiv.innerHTML = `
+                            <h3>ℹ️ User Already Exists</h3>
+                            <p>The test user already exists in the database.</p>
+                            <p>Username: <strong>${data.username}</strong></p>
+                            <p>Password: <strong>${data.password}</strong></p>
+                            <p style="margin-top: 15px;">
+                                You can login with these credentials.
+                            </p>
+                        `;
+                    }
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `
+                        <h3>❌ Error</h3>
+                        <p>${data.message || 'Failed to create test user'}</p>
+                        ${data.error ? `<p>Details: ${data.error}</p>` : ''}
+                    `;
+                }
+            } catch (error) {
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Network Error</h3>
+                    <p>Failed to connect to the server.</p>
+                    <p>Error: ${error.message}</p>
+                `;
+            } finally {
+                // Re-enable button
+                btn.disabled = false;
+                btn.innerHTML = 'Create Test User';
+            }
+        }
+    </script>
+</body>
+</html>
+
