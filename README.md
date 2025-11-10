@@ -11,6 +11,9 @@ A full-stack web application for managing personal finances with income/expense 
 ## Deployment Links
 - **Application Link**: https://personal-budget-tracker-xi.vercel.app 
 - **Backend**: https://personal-budget-tracker-xr3r.onrender.com
+**Credentials:
+username- testuser
+password- testpass123**
 
 ## Quick Start (Local Development)
 ### 1. Python Environment & Dependencies
