@@ -27,9 +27,10 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 SECRET_KEY = 'django-insecure-rq%f*d1vjcgrnds5$-)fh1a@vpmf#%l@-&+_l47*-(#xqx#)la'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["personal-budget-tracker-xr3r.onrender.com", "localhost", "127.0.0.1"]
+
 
 
 # Application definition
@@ -157,4 +158,8 @@ REST_FRAMEWORK = {
 }
 
 # CORS (development defaults)
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ALLOWED_ORIGINS = [
+    "https://personal-budget-tracker-git-main-deepaks-projects-1c556f39.vercel.app",  # your Vercel frontend
+]
