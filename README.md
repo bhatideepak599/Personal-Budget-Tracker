@@ -8,16 +8,9 @@ A full-stack web application for managing personal finances with income/expense 
 - **Database**: SQLite (development), PostgreSQL (production)
 - **Features**: User authentication, category management, transaction tracking, monthly budgets, expense visualization
 
-## Quick Links
-- [Features Documentation](FEATURES.md) - Complete feature list and API documentation
-- [UI Improvements](UI_IMPROVEMENTS.md) - Modern UI design system and enhancements
-- [UI Fixes Summary](UI_FIXES_SUMMARY.md) - Latest UI fixes and optimizations
-- [Deployment Guide](DEPLOYMENT.md) - How to deploy to production (Render, Vercel, etc.)
-- [Demo Guide](DEMO_GUIDE.md) - Step-by-step walkthrough of all features
-- [Testing Checklist](TESTING_CHECKLIST.md) - Comprehensive testing checklist
-- [Project Summary](PROJECT_SUMMARY.md) - Complete project overview and status
-- [Restructure Summary](RESTRUCTURE_SUMMARY.md) - Frontend architecture and organization
-- [Assessment Requirements](ASSESSMENT.md) - Original technical assessment requirements
+## Deployment Links
+- **Application Link**: https://personal-budget-tracker-xi.vercel.app 
+- **Backend**: https://personal-budget-tracker-xr3r.onrender.com
 
 ## Quick Start (Local Development)
 ### 1. Python Environment & Dependencies
