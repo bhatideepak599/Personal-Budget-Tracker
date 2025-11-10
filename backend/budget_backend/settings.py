@@ -157,9 +157,51 @@ REST_FRAMEWORK = {
     ),
 }
 
-# CORS (development defaults)
+# CORS Configuration for Production
 CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = [
-    "https://personal-budget-tracker-git-main-deepaks-projects-1c556f39.vercel.app",  # your Vercel frontend
+    "https://personal-budget-tracker-xi.vercel.app",  # Production Vercel frontend
+    "https://personal-budget-tracker-git-main-deepaks-projects-1c556f39.vercel.app",  # Vercel preview
+    "http://localhost:5173",  # Local development
+    "http://127.0.0.1:5173",  # Local development
 ]
+
+# Allow credentials (cookies, authorization headers)
+CORS_ALLOW_CREDENTIALS = True
+
+# Additional CORS headers
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# CSRF Settings for production
+CSRF_TRUSTED_ORIGINS = [
+    "https://personal-budget-tracker-xi.vercel.app",
+    "https://personal-budget-tracker-git-main-deepaks-projects-1c556f39.vercel.app",
+]
+
+# JWT Configuration
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'UPDATE_LAST_LOGIN': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+}

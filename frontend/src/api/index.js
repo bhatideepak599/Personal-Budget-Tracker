@@ -1,4 +1,6 @@
-const API_BASE = '/api';
+// Use environment variable for API base URL, fallback to relative path for development
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = API_BASE_URL ? `${API_BASE_URL}/api` : '/api';
 
 let token = localStorage.getItem('token');
 let refreshToken = localStorage.getItem('refreshToken');
