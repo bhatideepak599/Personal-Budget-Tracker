@@ -1,0 +1,97 @@
+# ===== PYTHON / DJANGO =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Django files
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+/static/
+media/
+*.pot
+
+# ===== NODE / REACT / VITE =====
+# Node dependencies and builds
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
+frontend/.parcel-cache/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.production.local
+frontend/.env.test.local
+
+# Lock files / Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ===== IDE / OS FILES =====
+.DS_Store
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+Thumbs.db
+
+# ===== TEST / CACHE =====
+*.cache
+*.pytest_cache/
+coverage/
+*.bak
+*.tmp
+
+# ===== CUSTOM PROJECT FILES =====
+backend/access.txt
+backend/token.json
+backend/token_resp.json
+
+# Documentation (you mentioned these earlier)
+Testing_Checklist.md
+DEMO_GUIDE.md
+DEPLOYMENT.md
+FEATURES.md
+RESTRUCTURE_SUMMARY.md
+ASSESSMENT.md
+FINAL_STATUS.md
