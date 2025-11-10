@@ -1,0 +1,120 @@
+/* Button Component Styling */
+
+.button {
+  background: linear-gradient(135deg, var(--color-primary), #1d4ed8);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.65rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.button:hover::before {
+  left: 100%;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Variants */
+.button--primary {
+  background: linear-gradient(135deg, var(--color-primary), #1d4ed8);
+}
+
+.button--secondary {
+  background: linear-gradient(135deg, var(--color-accent), #0d9488);
+  box-shadow: 0 2px 8px rgba(20, 184, 166, 0.25);
+}
+
+.button--secondary:hover {
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.35);
+}
+
+.button--success {
+  background: linear-gradient(135deg, var(--color-success), #15803d);
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
+}
+
+.button--danger {
+  background: linear-gradient(135deg, var(--color-error), #dc2626);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
+.button--outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  box-shadow: none;
+}
+
+.button--outline:hover {
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.button--ghost {
+  background: transparent;
+  color: var(--color-text);
+  box-shadow: none;
+}
+
+.button--ghost:hover {
+  background-color: #f3f4f6;
+  box-shadow: none;
+}
+
+/* Sizes */
+.button--sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.button--md {
+  padding: 0.65rem 1.5rem;
+  font-size: 0.95rem;
+}
+
+.button--lg {
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+}
+
+/* Full width */
+.button--full {
+  width: 100%;
+}

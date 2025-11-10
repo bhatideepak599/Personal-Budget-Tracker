@@ -1,0 +1,62 @@
+/* Layout Component Styling */
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+/* Navbar area stays fixed at top */
+.layout__navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+/* Main content stretches full height */
+.layout__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Add soft animations for transitions */
+.layout__content {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Simple fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Adjust for mobile devices */
+@media (max-width: 768px) {
+  .layout__content {
+    padding: 1rem;
+  }
+}
+
+/* Optional footer if used */
+.layout__footer {
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  border-top: 1px solid #e5e7eb;
+  background-color: var(--color-surface);
+}

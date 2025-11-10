@@ -1,0 +1,89 @@
+/* Select Dropdown Styling */
+
+.select-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.select-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.select-field {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  background-color: #fff;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--color-text);
+  transition: all 0.2s ease;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+  background-image: url("data:image/svg+xml;charset=UTF-8,<svg fill='%232563eb' height='20' width='20' viewBox='0 0 20 20'><path d='M5.516 7.548L10 12.032l4.484-4.484L16 9.064l-6 6-6-6z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.25rem;
+}
+
+.select-field:hover {
+  border-color: #d1d5db;
+}
+
+.select-field:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+  background-color: #fafbff;
+}
+
+.select-error {
+  border-color: var(--color-error);
+}
+
+.select-error:focus {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+.select-error-message {
+  font-size: 0.85rem;
+  color: var(--color-error);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.select-disabled {
+  background-color: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  border-color: #e5e7eb;
+}
+
+.select-disabled:hover {
+  border-color: #e5e7eb;
+}
+
+/* For consistent alignment with inputs */
+.select-group .select-field,
+.input-group .input-field {
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .select-field {
+    font-size: 0.9rem;
+    padding: 0.65rem 2.5rem 0.65rem 0.9rem;
+  }
+}

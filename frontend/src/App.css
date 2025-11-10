@@ -1,0 +1,47 @@
+/* App Layout Styles */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Top Navbar fixed layout */
+.navbar-container {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+/* Main content area takes full screen height minus navbar */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 2rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Responsive spacing for small screens */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+}
+
+/* Footer styling (if exists) */
+.footer {
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  border-top: 1px solid #e5e7eb;
+  background-color: var(--color-surface);
+}

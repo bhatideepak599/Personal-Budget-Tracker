@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Personal Budget Tracker</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 20px; }
+      .row { display: flex; gap: 24px; align-items: flex-start; }
+      .card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin: 8px 0; }
+      label { display:block; margin: 6px 0 2px; }
+      input, select { padding: 6px 8px; width: 100%; }
+      button { padding: 8px 12px; cursor: pointer; }
+      table { border-collapse: collapse; width: 100%; }
+      th, td { border: 1px solid #e5e5e5; padding: 8px; }
+      #chart { width: 420px; height: 320px; }
+    </style>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  </head>
+  <body>
+    <h1>Personal Budget Tracker</h1>
+    <div id="root"></div>
+
+    <script type="text/babel">
+    {% verbatim %}
+      const API = "/api";
+
+      function useToken() {
+        const [token, setToken] = React.useState(localStorage.getItem('token') || '');
+        const save = (t) => { localStorage.setItem('token', t); setToken(t); };
+        const clear = () => { localStorage.removeItem('token'); setToken(''); }
+        return { token, setToken: save, clear };
+      }
+
+      async function apiFetch(path, opts = {}, token) {
+        const headers = { 'Content-Type': 'application/json', ...(opts.headers||{}) };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+        const res = await fetch(`${API}${path}`, { ...opts, headers });
+        if (!res.ok) throw new Error(await res.text());
+        return res.json();
+      }
+
+      function Login({ onLogin }) {
+        const [username, setU] = React.useState('testuser');
+        const [password, setP] = React.useState('testpass123');
+        const [err, setErr] = React.useState('');
+        const submit = async (e) => {
+          e.preventDefault();
+          setErr('');
+          try {
+            const data = await apiFetch('/token/', { method: 'POST', body: JSON.stringify({ username, password }) });
+            onLogin(data.access);
+          } catch (e) { setErr(String(e)); }
+        };
+        return (
+          <div className="card" style={{maxWidth: 360}}>
+            <h3>Login</h3>
+            {err && <div style={{color:'crimson'}}>{err}</div>}
+            <form onSubmit={submit}>
+              <label>Username</label>
+              <input value={username} onChange={e=>setU(e.target.value)} />
+              <label>Password</label>
+              <input type="password" value={password} onChange={e=>setP(e.target.value)} />
+              <button type="submit" style={{marginTop:8}}>Sign in</button>
+            </form>
+          </div>
+        );
+      }
+
+      function CategoryManager({ token, onChanged }) {
+        const [list, setList] = React.useState([]);
+        const [name, setName] = React.useState('');
+        const [type, setType] = React.useState('expense');
+        const load = React.useCallback(async ()=>{
+          const data = await apiFetch('/categories/', {}, token);
+          setList(data.results || data);
+        }, [token]);
+        React.useEffect(()=>{ load(); }, [load]);
+        const add = async (e)=>{
+          e.preventDefault();
+          await apiFetch('/categories/', { method:'POST', body: JSON.stringify({ name, type }) }, token);
+          setName(''); onChanged && onChanged(); load();
+        };
+        return (
+          <div className="card">
+            <h3>Categories</h3>
+            <form onSubmit={add} className="row">
+              <div style={{minWidth:200}}>
+                <label>Name</label>
+                <input value={name} onChange={e=>setName(e.target.value)} required />
+              </div>
+              <div style={{minWidth:160}}>
+                <label>Type</label>
+                <select value={type} onChange={e=>setType(e.target.value)}>
+                  <option value="expense">Expense</option>
+                  <option value="income">Income</option>
+                </select>
+              </div>
+              <div style={{alignSelf:'end'}}>
+                <button>Add</button>
+              </div>
+            </form>
+            <ul>
+              {list.map(c=> <li key={c.id}>{c.name} <em>({c.type})</em></li>)}
+            </ul>
+          </div>
+        );
+      }
+
+      function Transactions({ token }) {
+        const [list, setList] = React.useState([]);
+        const [categories, setCats] = React.useState([]);
+        const [page, setPage] = React.useState(1);
+        const [date, setDate] = React.useState(new Date().toISOString().slice(0,10));
+        const [category, setCategory] = React.useState('');
+        const [amount, setAmount] = React.useState('');
+        const [desc, setDesc] = React.useState('');
+
+        const loadCats = React.useCallback(async ()=>{
+          const data = await apiFetch('/categories/', {}, token);
+          setCats(data.results || data);
+        }, [token]);
+
+        const load = React.useCallback(async ()=>{
+          const data = await apiFetch(`/transactions/?page=${page}`, {}, token);
+          setList(data.results || data);
+        }, [token, page]);
+
+        React.useEffect(()=>{ loadCats(); }, [loadCats]);
+        React.useEffect(()=>{ load(); }, [load]);
+
+        const add = async (e)=>{
+          e.preventDefault();
+          await apiFetch('/transactions/', { method:'POST', body: JSON.stringify({ date, category, amount, description: desc }) }, token);
+          setAmount(''); setDesc(''); load();
+        }
+
+        return (
+          <div className="card">
+            <h3>Transactions</h3>
+            <form onSubmit={add} className="row">
+              <div>
+                <label>Date</label>
+                <input type="date" value={date} onChange={e=>setDate(e.target.value)} />
+              </div>
+              <div>
+                <label>Category</label>
+                <select value={category} onChange={e=>setCategory(e.target.value)} required>
+                  <option value="">-- choose --</option>
+                  {categories.map(c=> <option value={c.id} key={c.id}>{c.name} ({c.type[0]})</option>)}
+                </select>
+              </div>
+              <div>
+                <label>Amount</label>
+                <input type="number" step="0.01" value={amount} onChange={e=>setAmount(e.target.value)} required />
+              </div>
+              <div style={{minWidth:240}}>
+                <label>Description</label>
+                <input value={desc} onChange={e=>setDesc(e.target.value)} />
+              </div>
+              <div style={{alignSelf:'end'}}>
+                <button>Add</button>
+              </div>
+            </form>
+            <table>
+              <thead>
+                <tr><th>Date</th><th>Category</th><th>Type</th><th>Amount</th><th>Description</th></tr>
+              </thead>
+              <tbody>
+                {list.map(t=> (
+                  <tr key={t.id}>
+                    <td>{t.date}</td>
+                    <td>{t.category_name}</td>
+                    <td>{t.category_type}</td>
+                    <td>{t.amount}</td>
+                    <td>{t.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      }
+
+      function SummaryChart({ token }) {
+        const ref = React.useRef(null);
+        const [data, setData] = React.useState([]);
+        const [m, setM] = React.useState(new Date().toISOString().slice(0,7));
+
+        const load = React.useCallback(async ()=>{
+          const res = await apiFetch(`/transactions/summary/?month=${m}`, {}, token);
+          const list = res.expenses_by_category.map(d=> ({ name: d["category__name"], value: +d.total }));
+          setData(list);
+        }, [token, m]);
+
+        React.useEffect(()=>{ load(); }, [load]);
+        React.useEffect(()=>{
+          const el = ref.current; if (!el) return;
+          el.innerHTML = '';
+          const width = 420, height = 320, radius = Math.min(width, height) / 2;
+          const svg = d3.select(el).append('svg').attr('width', width).attr('height', height)
+            .append('g').attr('transform', `translate(${width/2},${height/2})`);
+          const color = d3.scaleOrdinal(d3.schemeTableau10);
+          const pie = d3.pie().value(d=>d.value);
+          const arc = d3.arc().innerRadius(60).outerRadius(radius);
+          const arcs = svg.selectAll('arc').data(pie(data)).enter().append('g');
+          arcs.append('path').attr('d', arc).attr('fill', d=>color(d.data.name));
+          arcs.append('text').attr('transform', d=>`translate(${arc.centroid(d)})`).attr('text-anchor','middle').text(d=>d.data.name);
+        }, [data]);
+
+        return (
+          <div className="card">
+            <h3>Expenses by Category</h3>
+            <div className="row">
+              <input type="month" value={m} onChange={e=>setM(e.target.value)} />
+            </div>
+            <div id="chart" ref={ref}></div>
+          </div>
+        );
+      }
+
+      function App() {
+        const { token, setToken, clear } = useToken();
+        if (!token) return <Login onLogin={setToken} />
+        return (
+          <div>
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+              <h2>Dashboard</h2>
+              <button onClick={clear}>Sign out</button>
+            </div>
+            <div className="row">
+              <div style={{flex: 2}}>
+                <CategoryManager token={token} />
+                <Transactions token={token} />
+              </div>
+              <div style={{flex: 1}}>
+                <SummaryChart token={token} />
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    {% endverbatim %}
+    </script>
+  </body>
+</html>
+
